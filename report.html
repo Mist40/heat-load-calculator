@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heat Load Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="text-center mb-3">
+    <img src="logo.jpg" alt="Company Logo" style="max-width: 200px; height: auto;">
+    <h2>Mist Air Condition</h2>
+</div>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Heat Load Report</h1>
+        <div id="report-content" class="mb-4"></div>
+        <a href="index.html" class="btn btn-primary">Back to Calculator</a>
+    </div>
+    <script>
+        // Load report data from localStorage
+        const reportData = JSON.parse(localStorage.getItem('heatLoadReport'));
+        const reportContent = document.getElementById('report-content');
+
+        if (!reportData) {
+            reportContent.innerHTML = `
+                <p class="text-danger">No report data available. Please complete a calculation in the calculator form first.</p>
+            `;
+        } else {
+            // Ensure units are correctly displayed
+            const areaUnit = reportData.unit === 'm' ? 'm²' : 'ft²';
+            const tempSymbol = reportData.tempUnit === 'C' ? '°C' : '°F';
+            const volumeUnit = reportData.unit === 'm' ? 'm³' : 'ft³';
+
+            // Generate windows table rows
+            let windowsRows = '';
+            reportData.windows.forEach((win, index) => {
+                const winAreaUnit = win.unit === 'm' ? 'm²' : 'ft²';
+                windowsRows += `
+                    <tr>
+                        <td>Window ${index + 1}</td>
+                        <td>Length: ${win.length} ${win.unit}, Width: ${win.width} ${win.unit}, Area: ${win.area} ${areaUnit}</td>
+                        <td>-</td>
+                    </tr>
+                `;
+            });
+
+<!-- Inside the <script> tag -->
+// Display the report in a table
+reportContent.innerHTML = `
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Details</th>
+                <th>Heat Load (BTU/h)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Room Volume</td>
+                <td>${reportData.volume} ${volumeUnit}</td>
+                <td>${reportData.volumeLoad}</td>
+            </tr>
+            <tr>
+                <td>Occupants</td>
+                <td>${reportData.occupants} people</td>
+                <td>${reportData.peopleLoad}</td>
+            </tr>
+            ${windowsRows}
+            <tr>
+                <td>Total Window Area</td>
+                <td>${reportData.windowArea} ${areaUnit}</td>
+                <td>${reportData.windowLoad}</td>
+            </tr>
+            <tr>
+                <td>Electrical Equipment</td>
+                <td>Computers: ${reportData.computerQuantity}, Lighting: ${reportData.lightingQuantity} bulbs at ${reportData.lightingWattage}W each (Load: ${reportData.lightingLoad} BTU/h)</td>
+                <td>${reportData.equipmentLoad}</td>
+            </tr>
+            <tr>
+                <td>Walls</td>
+                <td>Total Area: ${reportData.wallArea} ${areaUnit}, Net Area: ${reportData.netWallArea} ${areaUnit}, Material: ${reportData.wallMaterial.charAt(0).toUpperCase() + reportData.wallMaterial.slice(1)}, Thickness: ${reportData.wallThickness} inches</td>
+                <td>${reportData.wallLoad}</td>
+            </tr>
+            <tr>
+                <td>Ceiling</td>
+                <td>Area: ${reportData.ceilingArea} ${areaUnit}, Material: ${reportData.ceilingMaterial.charAt(0).toUpperCase() + reportData.ceilingMaterial.slice(1)}, Thickness: ${reportData.ceilingThickness} inches</td>
+                <td>${reportData.ceilingLoad}</td>
+            </tr>
+            <tr>
+                <td>Floor</td>
+                <td>Area: ${reportData.floorArea} ${areaUnit}, Material: ${reportData.floorMaterial.charAt(0).toUpperCase() + reportData.floorMaterial.slice(1)}, Thickness: ${reportData.floorThickness} inches</td>
+                <td>${reportData.floorLoad}</td>
+            </tr>
+            <tr>
+                <td>Air Exchange</td>
+                <td>${reportData.airExchange.charAt(0).toUpperCase() + reportData.airExchange.slice(1)}</td>
+                <td>${reportData.airExchangeLoad}</td>
+            </tr>
+            <tr>
+                <td>Temperature Difference</td>
+                <td>${reportData.tempDifference} °F (Outdoor: ${reportData.outdoorTemp} ${tempSymbol}, Indoor: 75°F)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <th>Total Heat Load</th>
+                <th>-</th>
+                <th>${reportData.totalBTU}</th>
+            </tr>
+            <tr>
+                <th>Equivalent in kW</th>
+                <th>-</th>
+                <th>${reportData.totalKW}</th>
+            </tr>
+        </tbody>
+    </table>
+`;
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

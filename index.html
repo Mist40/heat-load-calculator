@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heat Load Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Heat Load Calculator</h1>
+        <form id="heat-load-form">
+            <!-- Unit Selection -->
+            <div class="mb-3">
+                <h5>Units</h5>
+                <label for="unit" class="form-label">Measurement Unit:</label>
+                <select id="unit" class="form-select" required>
+                    <option value="ft">Feet</option>
+                    <option value="m">Meters</option>
+                </select>
+            </div>
+
+            <!-- Room Dimensions -->
+            <div class="mb-3">
+                <h5>Room Dimensions</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="length" class="form-label">Length:</label>
+                        <input type="number" id="length" class="form-control" step="any" min="0" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="width" class="form-label">Width:</label>
+                        <input type="number" id="width" class="form-control" step="any" min="0" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="height" class="form-label">Height:</label>
+                        <input type="number" id="height" class="form-control" step="any" min="0" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outdoor Temperature -->
+            <div class="mb-3">
+                <h5>Outdoor Temperature</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="outdoor-temp" class="form-label">Temperature:</label>
+                        <input type="number" id="outdoor-temp" class="form-control" step="any" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="temp-unit" class="form-label">Unit:</label>
+                        <select id="temp-unit" class="form-select" required>
+                            <option value="C">Celsius</option>
+                            <option value="F">Fahrenheit</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Number of Occupants -->
+            <div class="mb-3">
+                <h5>Number of Occupants</h5>
+                <label for="occupants" class="form-label">Number of People:</label>
+                <input type="number" id="occupants" class="form-control" min="0" value="0" required>
+            </div>
+
+            <!-- Windows -->
+            <div class="mb-3" id="windows-section">
+                <h5>Windows</h5>
+                <div id="window-inputs">
+                    <!-- Dynamically added windows will appear here -->
+                    <div class="window-entry row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Window Length:</label>
+                            <input type="number" class="form-control window-length" step="any" min="0" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Window Width:</label>
+                            <input type="number" class="form-control window-width" step="any" min="0" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Unit:</label>
+                            <select class="form-select window-unit" required>
+                                <option value="ft">Feet</option>
+                                <option value="m">Meters</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger remove-window">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="add-window" class="btn btn-secondary mt-2">Add Window</button>
+            </div>
+
+            <!-- Internal Heat Sources -->
+            <div class="mb-3">
+                <h5>Internal Heat Sources</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="computer-quantity" class="form-label">Computers:</label>
+                        <input type="number" id="computer-quantity" class="form-control" min="0" value="0" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="lighting-wattage" class="form-label">Wattage per LED Bulb:</label>
+                        <input type="number" id="lighting-wattage" class="form-control" step="any" min="0" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="lighting-quantity" class="form-label">Number of Bulbs:</label>
+                        <input type="number" id="lighting-quantity" class="form-control" min="0" value="0" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Structural Elements -->
+<div class="mb-3">
+    <h5>Structural Elements</h5>
+    <div class="row mb-2">
+        <div class="col-md-3">
+            <label for="wall-material" class="form-label">Wall Material:</label>
+            <select id="wall-material" class="form-select" required>
+                <option value="brick">Brick</option>
+                <option value="concrete">Concrete</option>
+                <option value="cement">Cement</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="wall-thickness" class="form-label">Wall Thickness (inches):</label>
+            <input type="number" id="wall-thickness" class="form-control" step="any" min="0" required>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-md-3">
+            <label for="ceiling-material" class="form-label">Ceiling Material:</label>
+            <select id="ceiling-material" class="form-select" required>
+                <option value="brick">Brick</option>
+                <option value="concrete">Concrete</option>
+                <option value="cement">Cement</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="ceiling-thickness" class="form-label">Ceiling Thickness (inches):</label>
+            <input type="number" id="ceiling-thickness" class="form-control" step="any" min="0" required>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-md-3">
+            <label for="floor-material" class="form-label">Floor Material:</label>
+            <select id="floor-material" class="form-select" required>
+                <option value="brick">Brick</option>
+                <option value="concrete">Concrete</option>
+                <option value="cement">Cement</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="floor-thickness" class="form-label">Floor Thickness (inches):</label>
+            <input type="number" id="floor-thickness" class="form-control" step="any" min="0" required>
+        </div>
+    </div>
+</div>
+
+            <!-- Air Exchange -->
+            <div class="mb-3">
+                <h5>Air Exchange</h5>
+                <label for="air-exchange" class="form-label">Air Exchange Quality:</label>
+                <select id="air-exchange" class="form-select" required>
+                    <option value="good">Good</option>
+                    <option value="normal">Normal</option>
+                    <option value="poor">Poor</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Calculate Heat Load</button>
+            <button type="button" id="view-report" class="btn btn-success mt-2" style="display: none;">View Detailed Report</button>
+        </form>
+
+        <!-- Results -->
+        <div id="result" class="mt-4" style="display: none;"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
